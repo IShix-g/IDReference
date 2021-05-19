@@ -12,5 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae42dcf67a1045aa94617f4ab84ef0ab, type: 3}
   m_Name: ItemIDReferenceList
   m_EditorClassIdentifier: 
-  references: []
+  references:
+  - ID: IDRef-Item-8scqd
+    Name: "Herb \u85AC\u8349"
+  - ID: IDRef-Item-ls4ds
+    Name: "Wings \u7FBD"
+  - ID: IDRef-Item-pp2ke
+    Name: "Torch \u677E\u660E"
+  - ID: IDRef-Item-325p9
+    Name: "Fairy Water \u7CBE\u970A\u306E\u6C34"
+  - ID: IDRef-Item-780zh
+    Name: "Key \u9375"
+  - ID: IDRef-Item-z37d9
+    Name: "Ball of Light \u5149\u306E\u7389"
   tableID: Item

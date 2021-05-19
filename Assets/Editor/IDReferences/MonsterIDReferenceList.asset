@@ -12,5 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae42dcf67a1045aa94617f4ab84ef0ab, type: 3}
   m_Name: MonsterIDReferenceList
   m_EditorClassIdentifier: 
-  references: []
+  references:
+  - ID: IDRef-Monster-p4b2y
+    Name: "Slime \u30B9\u30E9\u30A4\u30E0"
+  - ID: IDRef-Monster-vx1wr
+    Name: "Ghost \u30B4\u30FC\u30B9\u30C8"
+  - ID: IDRef-Monster-yp0zc
+    Name: "Scorpion \u30B9\u30B3\u30FC\u30D4\u30AA\u30F3"
+  - ID: IDRef-Monster-akfdp
+    Name: "Golem \u30B4\u30FC\u30EC\u30E0"
+  - ID: IDRef-Monster-6q2x9
+    Name: "Skelton \u30B9\u30B1\u30EB\u30C8\u30F3"
+  - ID: IDRef-Monster-1vpgu
+    Name: "Mummy \u30DE\u30DF\u30FC"
   tableID: Monster

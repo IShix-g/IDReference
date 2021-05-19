@@ -19,14 +19,10 @@ MonoBehaviour:
     Name: "Dog \u72AC"
   - ID: IDRef-Character-fswz7
     Name: "Giraffe \u30AD\u30EA\u30F3"
-  - ID: IDRef-Character-h5yu5
-    Name: "Zebra \u30B7\u30DE\u30A6\u30DE"
   - ID: IDRef-Character-uo8kr
     Name: "Horse \u99AC"
   - ID: IDRef-Character-hwvyt
     Name: "Elephant \u305E\u3046"
-  - ID: IDRef-Character-lqlja
-    Name: "Koala \u30B3\u30A2\u30E9"
   - ID: IDRef-Character-g455g
     Name: "Gorilla \u30B4\u30EA\u30E9"
   tableID: Character
