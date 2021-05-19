@@ -206,5 +206,8 @@ It is assumed that the settings are made from the Unity inspector.
 |  Understandability  |  OK  |  NG  |  OK  | OK |
 |  Reference check  |  OK  |  NG  |  NG  | NG |
 
+# CSV Import / Export
+![ID list](ReadMeImages/image13.png)
+
 # Sample ID list
 ![ID list](ReadMeImages/image12.png)
