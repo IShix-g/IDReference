@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Csv;
 using UnityEditor;
 using UnityEngine;
 
@@ -10,23 +11,28 @@ namespace IDRef.Internal
 {
     public sealed class IDReferenceImportCsvWindow : EditorWindow
     {
-        readonly List<string> wordList = new List<string>();
-        IDReferenceImportCsvWindow window;
         int toggleIdx;
         Vector2 scrollPosition;
         Action<List<string>> importAction;
-        
+        ICsvLine[] csvLines;
+        int skipLine;
+        string currentPath;
+
         public static void ShowDialog(Action<List<string>> importAction)
         {
             var window = GetWindow<IDReferenceImportCsvWindow>("Import CSV");
             window.Show();
-            window.window = window;
             window.minSize = new Vector2(400, 300);
             window.importAction = importAction;
         }
 
         void OnGUI()
         {
+            if (importAction == default)
+            {
+                Close();
+            }
+            
             {
                 GUILayout.BeginVertical( GUI.skin.box );
                 var style = new GUIStyle(GUI.skin.label)
@@ -49,24 +55,26 @@ namespace IDRef.Internal
                 GUILayout.BeginVertical( GUI.skin.box );
                 if (GUILayout.Button("Load from file.", style))
                 {
-                    var path = EditorUtility.OpenFilePanel("Select CSV",  "", "csv");
-                    if (string.IsNullOrEmpty(path))
+                    currentPath = EditorUtility.OpenFilePanel("Select CSV file",  IDReferenceConfig.LatestOpenDirectory, "csv");
+                    if (string.IsNullOrEmpty(currentPath))
                     {
                         return;
                     }
 
-                    wordList.Clear();
+                    IDReferenceConfig.LatestOpenDirectory = currentPath;
+                    csvLines = null;
                     
                     try
                     {
-                        using (var sr = new StreamReader(path))
+                        var bs = File.ReadAllBytes(currentPath);
+                        var enc = bs.GetEncodingCode();
+                        var stg = enc.GetString(bs);
+                        
+                        var options = new CsvOptions
                         {
-                            string line;
-                            while ((line = sr.ReadLine()) != null)
-                            {
-                                wordList.Add(line);
-                            }
-                        }
+                            HeaderMode = HeaderMode.HeaderAbsent
+                        };
+                        csvLines = CsvReader.ReadFromText(stg, options).ToArray();
                     }
                     catch (Exception e)
                     {
@@ -75,27 +83,31 @@ namespace IDRef.Internal
                 }
                 GUILayout.EndVertical();
             }
-
-            if (wordList.Count == 0)
+            
+            if (csvLines == null || csvLines.Length == 0)
             {
                 return;
+            }
+
+            {
+                GUILayout.BeginHorizontal( GUI.skin.box );
+                GUILayout.Label("Skip line");
+                var text = GUILayout.TextField(skipLine.ToString());
+                try
+                {
+                    skipLine = Mathf.Clamp(int.Parse(text), 0, csvLines.Length - 1);
+                }
+                catch
+                {
+                    skipLine = 0;
+                }
+                
+                GUILayout.EndHorizontal();
             }
             
             scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition);
-            var map = wordList.Select(s => s.Split(',')).ToArray();
-            
-            if (map.Length == 0)
-            {
-                return;
-            }
 
             {
-                var style = new GUIStyle(GUI.skin.textField)
-                {
-                    alignment = TextAnchor.MiddleCenter,
-                    wordWrap = true
-                };
-                
                 var styleToggle = new GUIStyle(GUI.skin.toggle)
                 {
                     alignment = TextAnchor.MiddleCenter,
@@ -103,36 +115,43 @@ namespace IDRef.Internal
                 };
 
                 GUILayout.BeginVertical(GUI.skin.box);
-                var width = window.position.size.x / map.Length;
+                var width = position.size.x / csvLines.Length;
                 
                 GUILayout.BeginHorizontal();
-                for (var j = 0; j < map[0].Length; j++)
+                for (var i = 0; i < csvLines[0].Values.Length; i++)
                 {
-                    var selected = EditorGUILayout.Toggle(toggleIdx == j, styleToggle, GUILayout.MinWidth(width), GUILayout.MinHeight(35));
+                    var selected = EditorGUILayout.Toggle(toggleIdx == i, styleToggle, GUILayout.MinWidth(width), GUILayout.MinHeight(35));
                     if (selected)
                     {
-                        toggleIdx = j;
+                        toggleIdx = i;
                     }
-                    if (j != map[0].Length - 1)
+                    if (i < csvLines[0].Values.Length - 1)
                     {
                         GUILayout.Space(5);
                     }
                 }
                 GUILayout.EndHorizontal();
                 
-                for (var i = 0; i < map.Length; i++)
+                var style = new GUIStyle(GUI.skin.textField)
+                {
+                    alignment = TextAnchor.MiddleCenter,
+                    wordWrap = true
+                };
+                for (var i = skipLine; i < csvLines.Length; i++)
                 {
                     GUILayout.BeginHorizontal();
-                    for (var j = 0; j < map[i].Length; j++)
+                    for (var j = 0; j < csvLines[i].Values.Length; j++)
                     {
-                        GUILayout.TextField(map[i][j], style, GUILayout.MinWidth(width));
-                        if (j != map[i].Length - 1)
+                        GUILayout.Label(csvLines[i].Values[j], style, GUILayout.MinWidth(width));
+                        if (j < csvLines[i].Values.Length - 1)
                         {
                             GUILayout.Space(5);
                         }
                     }
                     GUILayout.EndHorizontal();
+                    GUILayout.Space(5);
                 }
+                
                 GUILayout.EndVertical();
             }
 
@@ -164,12 +183,12 @@ namespace IDRef.Internal
                     if (EditorUtility.DisplayDialog(titleTxt, contentsTxt, btnTxt, "Close"))
                     {
                         var results = new List<string>();
-                        for (var i = 0; i < map.Length; i++)
+                        for (var i =  skipLine; i < csvLines.Length; i++)
                         {
-                            results.Add(map[i][toggleIdx]);
+                            results.Add(csvLines[i].Values[toggleIdx]);
                         }
                         importAction?.Invoke(results);
-                        window.Close();
+                        Close();
                     }
                 }
                 GUILayout.EndVertical();

@@ -1,4 +1,5 @@
 #if UNITY_EDITOR
+using System.IO;
 using UnityEditor;
 using UnityEngine;
 
@@ -14,7 +15,7 @@ namespace IDRef.Internal
         public const int IDRandomStringLength = 5;
         public const string IDStart = "IDRef";
         public const char IDPrfx = '-';
-        
+
         public static Texture2D Logo
         {
             get
@@ -27,6 +28,19 @@ namespace IDRef.Internal
         public static string CreateID(string category, string id) => $"{IDStart}{IDPrfx}{category}{IDPrfx}{id}";
 
         public static bool IsID(string stg) => stg.StartsWith(IDStart);
+        
+        public static string LatestOpenDirectory
+        {
+            get
+            {
+                return EditorPrefs.GetString("IDReferenceConfig_LatestOpenDirectory", Application.dataPath);
+            }
+            set
+            {
+                var path = Path.GetDirectoryName(value);
+                EditorPrefs.SetString("IDReferenceConfig_LatestOpenDirectory", path);
+            }
+        }
     }
 }
 #endif

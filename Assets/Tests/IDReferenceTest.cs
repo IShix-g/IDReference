@@ -17,7 +17,6 @@ public sealed class IDReferenceTest : MonoBehaviour
             Debug.Log($"ID:{id} Name:{name}");
             // or
             Debug.Log(idReference);
-            
         }
 #endif
     }

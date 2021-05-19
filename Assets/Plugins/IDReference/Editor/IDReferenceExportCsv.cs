@@ -2,7 +2,9 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
+using Csv;
 using UnityEditor;
 using UnityEngine;
 
@@ -10,25 +12,22 @@ namespace IDRef.Internal
 {
     public sealed class IDReferenceExportCsv
     {
-        
-        public static void Export(string fileName, IEnumerable<string> list)
+        public static void Export(string fileName, IEnumerable<IDReference> references)
         {
-            var path = EditorUtility.SaveFilePanel("Save CSV",  "", fileName, "csv");
+            var path = EditorUtility.SaveFilePanel("Export CSV",  IDReferenceConfig.LatestOpenDirectory, fileName, "csv");
             if (string.IsNullOrEmpty(path))
             {
                 return;
             }
             
+            IDReferenceConfig.LatestOpenDirectory = path;
+            
             try
             {
-                using (var file = new StreamWriter(path, false, Encoding.UTF8))
-                {
-                    foreach (var obj in list)
-                    {
-                        file.WriteLine(obj);
-                    }
-                    file.Close();
-                }
+                var columnNames = new[] {"Id", "Name"};
+                var rows = references.Select(x => new[] {x.ID, x.Name});
+                var csv = CsvWriter.WriteToText(columnNames, rows, ',');
+                File.WriteAllText(path, csv, Encoding.UTF8);
             }
             catch (Exception e)
             {

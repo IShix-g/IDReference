@@ -116,8 +116,7 @@ namespace IDRef.Internal
                 
                 if (GUILayout.Button("Export CSV", style))
                 {
-                    var names = list.References.Select(x => $"{x.ID},{x.Name}");
-                    IDReferenceExportCsv.Export(list.TableID, names);
+                    IDReferenceExportCsv.Export(list.TableID, list.References);
                 }
                 
                 GUILayout.Space(5);
