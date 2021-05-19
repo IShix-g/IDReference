@@ -1,9 +1,9 @@
 {
   "name": "okinawa.ishix.idreference",
   "displayName": "ID Reference",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "unity": "2019.4",
-  "description": "[Unity] ID management tool.",
+  "description": "ID management tool.",
   "author": {
     "name": "IShix",
     "url": "https://github.com/IShix-g"
@@ -12,4 +12,3 @@
   "license": "MIT",
   "dependencies": {}
 }
-

@@ -5,17 +5,19 @@ Unity 2019.4 higher
 
 # Easily manage your ID.
 
-You can change the order of IDs and rename them. The change will not break the reference.
+Users want to be able to easily select and change the `Name`.  
+The system needs a unique `ID` that will never change.  
+`IDReference` satisfies the exact opposite requirements of the user and the system.
 
 ![manage your ID](ReadMeImages/image10.png)
 
-## Easy setting and selection
+## Easy selection
 
-You can pull down the items you have set by simply adding attributes.  
-The value is just a simple string, easy to handle.
+Just select from the pull-down menu and you won't make a mistake.
 
 ```c#
-[SerializeField, CharacterIDReference] string characterID; //Inspector:Cat 猫 characterID:IDRef-Character-iwp05
+[SerializeField, CharacterIDReference] string characterID;
+//Inspector:Cat 猫 characterID:IDRef-Character-iwp05
 ```
 ![Easy setting](ReadMeImages/image2.png)
 
@@ -24,7 +26,7 @@ The value is just a simple string, easy to handle.
 The dedicated panel makes it easy to modify.
 
 - Changing the name does not affect the reference in the destination.
-- Changing the order will not affect the reference at the destination.
+- Changing the order will not affect the reference in the destination.
 - Using a language other than English is not a problem.
 
 ![Changeable](ReadMeImages/image3.png)
@@ -34,8 +36,8 @@ The dedicated panel makes it easy to modify.
 The dedicated panel makes it easy to modify.
 
 - Show all references
-- Go to references
-- Print to references
+- Jump to references
+- Print reference
 
 ![where to use ID](ReadMeImages/image4.png)
 
@@ -61,10 +63,9 @@ Add the Url to Package Manager
 ### [Step1] Initialization.
 
 ```c#
-using IDRef;
-
 #if UNITY_EDITOR
 using UnityEditor;
+using IDRef;
 
 // [Step1] Initialization (editor only)
 [InitializeOnLoad]
@@ -84,7 +85,8 @@ public sealed class IDReferenceSetting
 ### [Step2] Defining Attributes.
 
 ```c#
-// [Step2] Defining Attributes
+using IDRef;
+
 public sealed class CharacterIDReferenceAttribute : IDReferenceAttribute
 {
     public override string GetTableID() => "Character";
@@ -94,7 +96,6 @@ public sealed class CharacterIDReferenceAttribute : IDReferenceAttribute
 ### [Step3] Adding attributes to scripts.
 
 ```c#
-// [Step3] Adding attributes to scripts.
 using UnityEngine;
 
 public sealed class IDReferenceTest : MonoBehaviour
@@ -106,38 +107,12 @@ public sealed class IDReferenceTest : MonoBehaviour
 
 ![Adding an ID](ReadMeImages/image3.png)
 
-### Notes.
+### [Option] Custom menu
 
-> - Multiple registrations are also possible.
-> - All of this is only available in the Unity Editor.
-> - The initialization code must be enclosed in `UNITY_EDITOR`.
-> - Do NOT enclose the Attribute code in `UNITY_EDITOR`, as it will be referenced by other classes.
+You can access the `ID reference list` by adding a custom menu.  
+It is useful to have it set up.
 
-# Options
-
-## Disable the Delete button
-
-If you delete an ID, you will not be able to refer to that ID. If you disable the delete button, you can sleep in peace. :)
-
-```c#
-characterTable = new IDReferenceTable("Character", disableRemoveButton: true);
-```
-
-![Delete button](ReadMeImages/image7.png)
-
-## Disable add ID in dropdown.
-
-By disabling add ID in the drop-down, you can make it so that only you can edit it.
-
-```c#
-characterTable = new IDReferenceTable("Character", disableDropDownAddID: true);
-```
-
-![add ID in dropdown](ReadMeImages/image8.png)
-
-## Custom menu
-
-You can access the ID list by adding a custom menu.
+![Custom menu](ReadMeImages/image9.png)
 
 ```c#
 static readonly IDReferenceTable characterTable;
@@ -155,17 +130,44 @@ public static void CharacterCustomMenu()
     characterTable.ShowSettingDialog();
 }
 ```
-![Custom menu](ReadMeImages/image9.png)
 
-# ID Reference
+### Notes.
+
+> - Multiple registrations are also possible.
+> - All of this is only available in the Unity Editor.
+> - The initialization code must be enclosed in `UNITY_EDITOR`.
+> - Do NOT enclose the Attribute code in `UNITY_EDITOR`, as it will be referenced by other classes.
+
+# Options
+
+## Disable the Delete button
+
+If you delete an ID, you can no longer reference that ID. This is the only weakness of `IDReference`.  
+If you disable the delete button, you can sleep easy knowing that the reference will never be corrupted :)
+
+```c#
+characterTable = new IDReferenceTable("Character", disableRemoveButton: true);
+```
+
+![Delete button](ReadMeImages/image7.png)
+
+## Disable add ID in dropdown.
+
+By disabling add ID in the drop-down, you can make it so that only you can edit it.
+
+```c#
+characterTable = new IDReferenceTable("Character", disableDropDownAddID: true);
+```
+
+![add ID in dropdown](ReadMeImages/image8.png)
+
+# ID Reference Object
 
 **Editor only.**
 
 ![IDReference](ReadMeImages/image11.png)
 
-The `characterID` contains an auto-generated ID.  
-In the editor, this can be converted to an object called `IdReference`.  
-The `IdReference` contains the ID and the Name.
+If IDs alone are difficult to understand, you can use `ToIDReferenceEditorOnly()` to convert the string into an `IDReference Object`.
 
 ```c#
 
@@ -194,20 +196,31 @@ public sealed class IDReferenceTest : MonoBehaviour
 }
 ```
 
+# CSV Import / Export
+
+`Shift_JIS` support.
+
+![ID list](ReadMeImages/image13.png)
+
 # Comparison of ID management
 
 It is assumed that the settings are made from the Unity inspector.
 
 |    |  IDReference  |  int  |  string  |  enum  |
 | ---- | ---- | ---- | ---- | ---- |
-|  Rename   |  OK  |  NG  |  NG  | OK |
-|  Reorder  |  OK  |  NG  |  NG  | NG |
-|  Use  |  OK  |  NG(typo)  |  NG(typo)  | OK |
-|  Understandability  |  OK  |  NG  |  OK  | OK |
-|  Reference check  |  OK  |  NG  |  NG  | NG |
-
-# CSV Import / Export
-![ID list](ReadMeImages/image13.png)
+|  Rename   |  Excellent  |  Poor  |  Poor  | Excellent |
+|  Reorder  |  Excellent  |  Fair  |  Fair  | Fair |
+|  Use  |  Excellent  |  Poor  |  Poor  | Excellent |
+|  Understandability  |  Excellent  |  Poor  |  Excellent  | Excellent |
+|  Reference check  |  Excellent  |  N/A  |  N/A  | N/A |
 
 # Sample ID list
+
+Character / Item / Monster / Story
+
 ![ID list](ReadMeImages/image12.png)
+
+# Library
+
+- [stevehansen/csv](https://github.com/stevehansen/csv)  
+  I use it for importing and exporting CSV.
