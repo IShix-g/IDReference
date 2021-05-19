@@ -7,7 +7,7 @@ using UnityEditor;
 
 namespace IDRef.Internal
 {
-    [HelpURL("https://github.com/IShix-g/IDReference")]
+    [HelpURL(IDReferenceConfig.DocumentUrl)]
     public sealed class IDReferenceList : ScriptableObject
     {
         [SerializeField] List<IDReference> references = new List<IDReference>();
@@ -18,10 +18,10 @@ namespace IDRef.Internal
 
         public void SetTableID(string tableID) => this.tableID = tableID;
         
-        public void AddNewID()
+        public void AddNewID(string name = "")
         {
             var id = IDReferenceConfig.CreateID(TableID, GenerateID());
-            var reference = new IDReference("", id);
+            var reference = new IDReference(name, id);
             references.Add(reference);
             EditorUtility.SetDirty(this);
         }

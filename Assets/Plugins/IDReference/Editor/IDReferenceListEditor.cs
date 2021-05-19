@@ -1,5 +1,6 @@
 
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEditor;
 using UnityEditorInternal;
@@ -75,7 +76,7 @@ namespace IDRef.Internal
             serializedObject.Update();
 
             {
-                GUILayout.BeginHorizontal( GUI.skin.box );
+                GUILayout.BeginVertical( GUI.skin.box );
                 var style = new GUIStyle(GUI.skin.label)
                 {
                     fontStyle = FontStyle.Bold,
@@ -83,6 +84,48 @@ namespace IDRef.Internal
                     alignment = TextAnchor.MiddleCenter,
                 };
                 GUILayout.Label(logo, style, GUILayout.MinWidth(50), GUILayout.MaxHeight(70));
+                GUILayout.EndVertical();
+            }
+
+            {
+                var style = new GUIStyle(GUI.skin.button)
+                {
+                    fontSize = 10
+                };
+                GUILayout.BeginHorizontal( GUI.skin.box );
+                if (GUILayout.Button("Import CSV", style))
+                {
+                    IDReferenceImportCsvWindow.ShowDialog(results =>
+                    {
+                        foreach (var result in results)
+                        {
+                            if (string.IsNullOrEmpty(result))
+                            {
+                                continue;
+                            }
+
+                            var has = list.References.Any(x => x.Name == result);
+                            if (!has)
+                            {
+                                list.AddNewID(result);
+                            }
+                        }
+                        
+                    });
+                }
+                
+                if (GUILayout.Button("Export CSV", style))
+                {
+                    var names = list.References.Select(x => x.Name);
+                    IDReferenceExportCsv.Export(list.TableID, names);
+                }
+                
+                GUILayout.Space(5);
+                
+                if (GUILayout.Button("Documents", style, GUILayout.Width(72)))
+                {
+                    Application.OpenURL(IDReferenceConfig.DocumentUrl);
+                }
                 GUILayout.EndHorizontal();
             }
             
@@ -94,19 +137,19 @@ namespace IDRef.Internal
             if (list == default || table == default)
             {
                 OnEnable();
-                GUILayout.BeginHorizontal( GUI.skin.box );
+                GUILayout.BeginVertical( GUI.skin.box );
                 var style = new GUIStyle(GUI.skin.label)
                 {
                     fontStyle = FontStyle.Bold,
                     padding = new RectOffset(0, 0, 10, 10)
                 };
                 GUILayout.Label("Load Error...", style);
-                GUILayout.EndHorizontal();
+                GUILayout.EndVertical();
                 return;
             }
             
             {
-                GUILayout.BeginHorizontal( GUI.skin.box );
+                GUILayout.BeginVertical( GUI.skin.box );
                 var style = new GUIStyle(GUI.skin.label)
                 {
                     fontStyle = FontStyle.Bold,
@@ -114,7 +157,7 @@ namespace IDRef.Internal
                     alignment = TextAnchor.MiddleCenter
                 };
                 GUILayout.Label(list.TableID, style);
-                GUILayout.EndHorizontal();
+                GUILayout.EndVertical();
             }
 
             EditorGUI.BeginChangeCheck();

@@ -185,19 +185,10 @@ namespace IDRef.Internal
             }
             
             {
-                GUILayout.BeginVertical( GUI.skin.box );
-                var style = new GUIStyle(GUI.skin.label)
-                {
-                    padding = new RectOffset(0, 0, 5, 5),
-                    alignment = TextAnchor.MiddleCenter,
-                    wordWrap = true
-                };
-
                 var btnTxt = IDReferenceConfig.Language == SystemLanguage.Japanese
-                    ? "シーン内のオブジェクトを検索するには\nシーンを開いた後、開き直してください。"
-                    : "To search for an object in a scene,\nfirst open the scene.";
-                GUILayout.Label(btnTxt, style);
-                GUILayout.EndVertical();
+                    ? "シーン内のオブジェクトを検索するには、シーンを開いた後、開き直してください。"
+                    : "To search for an object in a scene,first open the scene.";
+                EditorGUILayout.HelpBox(btnTxt, MessageType.Info);
             }
 
             GUILayout.BeginVertical( GUI.skin.box );
