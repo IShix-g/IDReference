@@ -5,7 +5,7 @@ Unity 2019.4 higher
 
 # Easily manage your ID.
 
-It is easy to change the order of IDs and Names, and does not affect the reference at the destination.
+You can change the order of IDs and rename them. The change will not break the reference.
 
 ![manage your ID](ReadMeImages/image10.png)
 
@@ -15,7 +15,7 @@ You can pull down the items you have set by simply adding attributes.
 The value is just a simple string, easy to handle.
 
 ```c#
-[SerializeField, CharacterIDReference] string characterID; //Inspector:Cat ID:IDRef-Character-iwp05
+[SerializeField, CharacterIDReference] string characterID; //Inspector:Cat 猫 characterID:IDRef-Character-iwp05
 ```
 ![Easy setting](ReadMeImages/image2.png)
 
