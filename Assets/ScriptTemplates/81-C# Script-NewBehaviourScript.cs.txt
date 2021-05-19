@@ -1,0 +1,7 @@
+
+using UnityEngine;
+
+public sealed class #SCRIPTNAME# : MonoBehaviour
+{
+
+}

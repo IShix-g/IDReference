@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae42dcf67a1045aa94617f4ab84ef0ab, type: 3}
+  m_Name: StoryIDReferenceList
+  m_EditorClassIdentifier: 
+  references:
+  - ID: IDRef-Story-7eum7
+    Name: "Opning \u30AA\u30FC\u30D7\u30CB\u30F3\u30B0"
+  - ID: IDRef-Story-6p5an
+    Name: "Story1 \u65C5\u7ACB\u3061"
+  - ID: IDRef-Story-lcil1
+    Name: "Story2 \u304D\u3063\u304B\u3051"
+  - ID: IDRef-Story-m8xqh
+    Name: "Story3 \u53CB\u9054"
+  - ID: IDRef-Story-yf0rc
+    Name: "Story4 \u518D\u4F1A"
+  - ID: IDRef-Story-01is5
+    Name: "Story5 \u30A8\u30F3\u30C7\u30A3\u30F3\u30B0"
+  tableID: Story

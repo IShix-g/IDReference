@@ -1,0 +1,17 @@
+{
+    "name": "IDReference.Editor",
+    "references": [
+        "GUID:71ba9321a91df4573b8f3c71844177ca"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
