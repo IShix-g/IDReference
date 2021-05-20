@@ -1,0 +1,78 @@
+name: TestCov
+
+on:
+  pull_request: {}
+  push: { branches: [master] }
+
+env:
+  UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+
+jobs:
+  build:
+    name: Test UniTool project
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          lfs: true
+          fetch-depth: 100
+      
+      # Setup Ruby
+      - uses: actions/setup-ruby@v1
+        with:
+          ruby-version: '2.7'
+          architecture: 'x64'
+      
+      # Install Denger
+      - name: Install Danger
+        run: |
+          sudo apt-get install xsltproc
+          gem install danger
+          gem install danger-junit
+
+      # Cache
+      - uses: actions/cache@v1.1.0
+        with:
+          path: Library
+          key: Library
+
+      # Test
+      - name: Run tests
+        uses: webbertakken/unity-test-runner@v1.6
+        with:
+          unityVersion: 2019.3.7f1
+          customParameters: -enableCodeCoverage
+      
+      # Run Danger
+      - run: danger
+        if: always()
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # Output
+      - uses: actions/upload-artifact@v1
+        with:
+          name: TestResults
+          path: artifacts
+         
+      # Output
+      - uses: actions/upload-artifact@v1
+        with:
+          name: CodeCoverage
+          path: CodeCoverage
+      
+      # Coverage
+      - name: Coverage Report
+        uses: codecov/codecov-action@v1
+        with:
+          flags: unittests
+          file: ./CodeCoverage/workspace-opencov/EditMode/TestCoverageResults_0000.xml
+          
+      # Coverage
+      - name: Coverage Report
+        uses: codecov/codecov-action@v1
+        with:
+          flags: unittests
+          file: ./CodeCoverage/workspace-opencov/PlayMode/TestCoverageResults_0000.xml
