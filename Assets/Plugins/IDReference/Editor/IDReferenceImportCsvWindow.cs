@@ -15,7 +15,7 @@ namespace IDRef.Internal
         Vector2 scrollPosition;
         Action<List<string>> importAction;
         ICsvLine[] csvLines;
-        int skipLine;
+        int skipRow;
         string currentPath;
 
         public static void ShowDialog(Action<List<string>> importAction)
@@ -91,15 +91,15 @@ namespace IDRef.Internal
 
             {
                 GUILayout.BeginHorizontal( GUI.skin.box );
-                GUILayout.Label("Skip line");
-                var text = GUILayout.TextField(skipLine.ToString());
+                GUILayout.Label("Skip row");
+                var text = GUILayout.TextField(skipRow.ToString());
                 try
                 {
-                    skipLine = Mathf.Clamp(int.Parse(text), 0, csvLines.Length - 1);
+                    skipRow = Mathf.Clamp(int.Parse(text), 0, csvLines.Length - 1);
                 }
                 catch
                 {
-                    skipLine = 0;
+                    skipRow = 0;
                 }
                 
                 GUILayout.EndHorizontal();
@@ -137,7 +137,7 @@ namespace IDRef.Internal
                     alignment = TextAnchor.MiddleCenter,
                     wordWrap = true
                 };
-                for (var i = skipLine; i < csvLines.Length; i++)
+                for (var i = skipRow; i < csvLines.Length; i++)
                 {
                     GUILayout.BeginHorizontal();
                     for (var j = 0; j < csvLines[i].Values.Length; j++)
@@ -183,7 +183,7 @@ namespace IDRef.Internal
                     if (EditorUtility.DisplayDialog(titleTxt, contentsTxt, btnTxt, "Close"))
                     {
                         var results = new List<string>();
-                        for (var i =  skipLine; i < csvLines.Length; i++)
+                        for (var i =  skipRow; i < csvLines.Length; i++)
                         {
                             results.Add(csvLines[i].Values[toggleIdx]);
                         }

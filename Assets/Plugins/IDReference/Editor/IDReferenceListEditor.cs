@@ -104,7 +104,7 @@ namespace IDRef.Internal
                                 continue;
                             }
 
-                            var has = list.References.Any(x => x.Name == result);
+                            var has = list.References.Any(x => x.Name == result || x.ID == result);
                             if (!has)
                             {
                                 list.AddNewID(result);

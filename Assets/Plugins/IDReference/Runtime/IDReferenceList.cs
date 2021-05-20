@@ -109,13 +109,14 @@ namespace IDRef.Internal
                     var c = IDReferenceConfig.IDCharacters[pos];
                     sb.Append(c);
                 }
-
+                
                 if (!HasIDReference(sb.ToString()))
                 {
                     break;
                 }
+                
+                sb.Length = 0;
             }
-            
             return sb.ToString();
         }
     }    
