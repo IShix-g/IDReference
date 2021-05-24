@@ -1,0 +1,74 @@
+name: Release Unity Package
+
+on:
+  workflow_run:
+    workflows:
+      - "Update package.json"
+    types:
+      - completed
+
+env:
+  FILE_NAME: "IDReference"
+  BUILD_METHOD: "IDReferenceExport.ExportGithub"
+
+jobs:
+  release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    strategy:
+      fail-fast: false
+    steps:
+      # Checkout
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          lfs: true
+      # Cache
+      - name: Cache
+        uses: actions/cache@v2
+        with:
+          path: Library
+          key: Library-Release
+          restore-keys: Library-
+      # Build
+      - name: Build package
+        id: build
+        uses: game-ci/unity-builder@v2
+        env:
+         UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+        with:
+          buildName: ${{ env.FILE_NAME }}.unitypackage
+          buildMethod: ${{ env.BUILD_METHOD }}
+          versioning: None
+      # Versioning
+      - name: Bump version and push tag
+        id: tag_version
+        uses: mathieudutour/github-tag-action@v5.5
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+      # Create Release
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.tag_version.outputs.new_tag }}
+          release_name: ${{ steps.tag_version.outputs.new_tag }}
+          body: ${{ steps.tag_version.outputs.changelog }}
+          draft: false
+          prerelease: false
+      # Upload Assets
+      - name: Upload Release Asset
+        id: upload-release-asset 
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.tag_version.outputs.new_tag }}
+          release_name: ${{ steps.tag_version.outputs.new_tag }}
+          upload_url: ${{ steps.create_release.outputs.upload_url }} 
+          asset_path: build/${{ env.FILE_NAME }}.unitypackage
+          asset_name: ${{ env.FILE_NAME }}_${{ steps.tag_version.outputs.new_tag }}.unitypackage
+          asset_content_type: application/zip
