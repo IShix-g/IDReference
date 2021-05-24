@@ -1,32 +1,22 @@
 ﻿
-using System;
+using System.IO;
 using UnityEditor;
 using PackageManagement;
-using UnityEngine;
 
 public static class IDReferenceExport
 {
+    public const string Root = "Assets/Plugins/IDReference";
+    public const string FileName = "IDReference";
+
     [MenuItem("Tools/Export Unitypackage")]
     public static void OpenExportDialog()
     {
-        PackageExporterWindow.ShowDialog(
-            "Assets/Plugins/IDReference",
-            "IDReference",
-            "Assets/Plugins/IDReference/package.json"
-        );
+        ExporterWindow.ShowDialog( Root, FileName );
     }
-    
-    public static void Export(string version, string exportPath)
+
+    public static void ExportGithub()
     {
-        Version.Parse(version);
-        if (string.IsNullOrEmpty(exportPath))
-        {
-            Debug.Log($"empty export path: {exportPath}");
-            return;
-        }
-        
-        var package = AssetUtils.LoadPackage("Assets/Plugins/IDReference/package.json");
-        package.version = version;
-        PackageExporter.Export(package, "IDReference", "Assets/Plugins/IDReference", exportPath);
+        var exportPath = Path.Combine("build", $"{FileName}.unitypackage");
+        PackageExporter.Export(Root, exportPath);
     }
 }

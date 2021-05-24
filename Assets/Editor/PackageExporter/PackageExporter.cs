@@ -1,27 +1,27 @@
 ﻿
 using System.IO;
-using System.Linq;
 using UnityEditor;
-using UnityEngine;
 
 namespace PackageManagement
 {
     public static class PackageExporter
     {
-        public static void Export(Package package, string fileName, string rootDir, string exportPath)
+        public static void Export(string rootDir, string exportPath)
         {
-            exportPath = AssetUtils.CreateExportPath(package.version, fileName, exportPath);
-            var assetsPaths = AssetUtils.GetAllAssetsPath(rootDir);
-            var packagePath = assetsPaths.FirstOrDefault(x => x.Contains("package.json"));
-            AssetUtils.SavePackage(package, packagePath);
-            Debug.Log("Export below files: " + string.Join("\n", assetsPaths));
-            Export(assetsPaths, exportPath);
+            Export(default, rootDir, exportPath);
         }
-
-        public static void Export(string[] assetsPaths, string exportPath)
+        
+        public static void Export(Package package, string rootDir, string exportPath)
         {
-             AssetDatabase.ExportPackage(assetsPaths, exportPath, ExportPackageOptions.Default);
-             Debug.Log("Export complete: " + Path.GetFullPath(exportPath));
+            var assetsPaths = Utils.GetAllAssetsPath(rootDir);
+            if (package != default)
+            {
+                Utils.SavePackage(package, rootDir);
+            }
+
+            Utils.Print($"Export below files:\n{string.Join("\n", assetsPaths)}");
+            AssetDatabase.ExportPackage(assetsPaths, exportPath, ExportPackageOptions.Default);
+            Utils.Print($"Export complete: {Path.GetFullPath(exportPath)}");
         }
     }
 }

@@ -1,12 +1,11 @@
 
-using System;
 using System.IO;
 using UnityEditor;
 using UnityEngine;
 
 namespace PackageManagement
 {
-    public sealed class PackageExporterWindow : EditorWindow
+    public sealed class ExporterWindow : EditorWindow
     {
         public static string CurrentDirectory
         {
@@ -18,17 +17,18 @@ namespace PackageManagement
             }
         }
         
-        string rootDir;
+        Editor editor;
+        string root;
         string fileName;
         Package package;
 
-        public static void ShowDialog(string rootDir, string fileName, string packagePath)
+        public static void ShowDialog(string root, string fileName)
         {
-            var window = GetWindow<PackageExporterWindow>("PackageExporter");
-            window.rootDir = rootDir;
+            var window = GetWindow<ExporterWindow>("PackageExporter");
+            window.root = root;
             window.fileName = fileName;
-            window.package = AssetUtils.LoadPackage(packagePath);
-
+            window.package = Utils.LoadPackage();
+            window.editor = Editor.CreateEditor(window.package);
             window.Show();
         }
 
@@ -45,26 +45,15 @@ namespace PackageManagement
                 };
                 GUILayout.Label("PackageExporter", style);
                 GUILayout.EndVertical();
+                GUILayout.Space(10);
             }
-
+            
+            GUILayout.BeginVertical( GUI.skin.box );
+            editor.OnInspectorGUI();
+            GUILayout.EndVertical();
+            
             {
-                GUILayout.BeginHorizontal( GUI.skin.box );
-                GUILayout.Label("version");
-                var newVersion = GUILayout.TextField(package.version);
-                try
-                {
-                    Version.Parse(newVersion);
-                    package.version = newVersion;
-                }
-                catch (Exception e)
-                {
-                    Debug.LogWarning(e);
-                }
-
-                GUILayout.EndHorizontal();
-            }
-
-            {
+                GUILayout.Space(10);
                 GUILayout.BeginVertical( GUI.skin.box );
                 var style = new GUIStyle(GUI.skin.button)
                 {
@@ -73,19 +62,21 @@ namespace PackageManagement
                 };
                 if (GUILayout.Button("Export", style))
                 {
+                    EditorUtility.SetDirty(package);
+                    AssetDatabase.SaveAssets();
+                    
                     var exportPath = EditorUtility.SaveFilePanel
                     (
                         "保存先を選択",
                         CurrentDirectory,
-                        AssetUtils.CreateFileName(package.version, fileName),
+                        Utils.CreateFileName(package.version, fileName),
                         "unitypackage"
                     );
                     
                     if (!string.IsNullOrEmpty(exportPath))
                     {
                         CurrentDirectory = exportPath;
-                        Debug.Log(CurrentDirectory);
-                        PackageExporter.Export(package, fileName, rootDir, CurrentDirectory);
+                        PackageExporter.Export(package, root, exportPath);
                     }
                 }
                 GUILayout.EndVertical();

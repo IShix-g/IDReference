@@ -1,61 +1,125 @@
 
 using System;
-using System.Collections.Generic;
+using System.Text;
+using UnityEditor;
 using UnityEngine;
 
 namespace PackageManagement
 {
     [Serializable]
-    public class Package
+    public class Package : ScriptableObject
     {
-        public string name;
+#pragma warning disable 0108
+        public string name = "com.example.name";
+#pragma warning restore 0108
+        public string version = "1.0.0";
         public string displayName;
-        public string version;
-        public string unity;
         public string description;
-        public Author author;
-        public string[] keywords;
-        public string license;
-        public Dictionary<string, string> dependencies;
-
-        public void MargePackage(Package newObj)
+        public string unity = "2019.4";
+        public Author author = new Author()
         {
-            if (!string.IsNullOrEmpty(newObj.name))
+            name = "Your name",
+            url = "https://"
+        };
+        public string[] keywords;
+        public Dependencie[] dependencies;
+        public string license = "MIT";
+
+        public string ToJson()
+        {
+            var serializedObject = new SerializedObject(this);
+            var iterator = serializedObject.GetIterator();
+
+            var sb = new StringBuilder();
+            sb.Append("{\n");
+            iterator.NextVisible(true);
+            while(iterator.NextVisible(false))
             {
-                name = newObj.name;
+                if (iterator.propertyPath == "dependencies")
+                {
+                    sb.Append($"\"{iterator.propertyPath}\": ");
+                    if (dependencies.Length > 0)
+                    {
+                        sb.Append("{\n");
+                        foreach (var dependency in dependencies)
+                        {
+                            if (string.IsNullOrEmpty(dependency.PackageName) ||
+                                string.IsNullOrEmpty(dependency.Version))
+                            {
+                                continue;
+                            }
+                            
+                            sb.Append($"    \"{dependency.PackageName}\": \"{dependency.Version.Trim()}\",\n");
+                        }
+                        
+                        var index = sb.ToString().LastIndexOf(',');
+                        if (index >= 0)
+                        {
+                            sb.Remove(index, 1);
+                        }
+                        
+                        sb.Append("},\n");
+                    }
+                    else
+                    {
+                        sb.Append("{},\n");
+                    }
+                }
+                else if (iterator.propertyPath == "author")
+                {
+                    sb.Append($"\"{iterator.propertyPath}\": {JsonUtility.ToJson(author, true)},\n");
+                }
+                else if (iterator.propertyPath == "keywords")
+                {
+                    sb.Append($"\"{iterator.propertyPath}\": ");
+
+                    if (keywords.Length > 0)
+                    {
+                        sb.Append("[\n");
+                        foreach (var keyword in keywords)
+                        {
+                            if (string.IsNullOrEmpty(keyword))
+                            {
+                                continue;
+                            }
+                            
+                            sb.Append($"    \"{keyword.Trim()}\",\n");
+                        }
+                        var index = sb.ToString().LastIndexOf(',');
+                        if (index >= 0)
+                        {
+                            sb.Remove(index, 1);
+                        }
+                        sb.Append("],\n");
+                    }
+                    else
+                    {
+                        sb.Append("[],\n");
+                    }
+                }
+                else
+                {
+                    if (iterator.propertyType == SerializedPropertyType.String)
+                    {
+                        sb.Append($"\"{iterator.propertyPath}\": \"{iterator.stringValue.Trim()}\",\n");
+                    }
+                    else if (iterator.propertyType == SerializedPropertyType.Integer)
+                    {
+                        sb.Append($"\"{iterator.propertyPath}\": \"{iterator.intValue}\",\n");
+                    }
+                }
             }
-            if (!string.IsNullOrEmpty(newObj.displayName))
+
             {
-                displayName = newObj.displayName;
+                var index = sb.ToString().LastIndexOf(',');
+                if (index >= 0)
+                {
+                    sb.Remove(index, 1);
+                }
             }
-            if (!string.IsNullOrEmpty(newObj.version))
-            {
-                version = newObj.version;
-            }
-            if (!string.IsNullOrEmpty(newObj.unity))
-            {
-                unity = newObj.unity;
-            }
-            if (!string.IsNullOrEmpty(newObj.description))
-            {
-                description = newObj.description;
-            }
-            if (newObj.author != default)
-            {
-                author = newObj.author;
-            }
-            if (newObj.keywords != default)
-            {
-                keywords = newObj.keywords;
-            }
-            if (!string.IsNullOrEmpty(newObj.license))
-            {
-                license = newObj.description;
-            }
-            if (newObj.dependencies != default)
-            {
-                dependencies = newObj.dependencies;
-            }
+
+            sb.Append("}");
+            return sb.ToString();
         }
         
         public override string ToString() => JsonUtility.ToJson(this);
@@ -66,5 +130,12 @@ namespace PackageManagement
     {
         public string name;
         public string url;
+    }
+    
+    [Serializable]
+    public class Dependencie
+    {
+        public string PackageName;
+        public string Version;
     }
 }
