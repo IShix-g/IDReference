@@ -1,9 +1,10 @@
+
 name: Update package.json
 
 on:
   push:
     branches:
-      - master
+      - main
 
 env:
   TARGET_FILE: ./Assets/Plugins/IDReference/package.json
@@ -15,8 +16,7 @@ jobs:
       # Checkout
       - uses: actions/checkout@v2
       - name: Output package.json (Before)
-        run: |
-          cat ${{ env.TARGET_FILE}}
+        run: cat ${{ env.TARGET_FILE}}
       # Cache
       - name: Cache
         uses: actions/cache@v2
@@ -50,7 +50,6 @@ jobs:
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git commit -m "Update package.json to ${{ steps.tag_version.outputs.new_version }}" -a
-          echo "::set-output name=sha::$(git rev-parse HEAD)"
       # Push
       - name: Push changes
         if: steps.check_update.outputs.changed == '1'
