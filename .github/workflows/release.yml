@@ -39,8 +39,19 @@ jobs:
          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
         with:
           buildName: ${{ env.FILE_NAME }}.unitypackage
+          targetPlatform: StandaloneLinux64
           buildMethod: ${{ env.BUILD_METHOD }}
           versioning: None
+      # Check .meta
+      - name: Check all .meta is commited
+        run: |
+          if git ls-files --others --exclude-standard -t | grep --regexp='[.]meta$'; then
+            echo "Detected .meta file generated. Do you forgot commit a .meta file?"
+            exit 1
+          else
+            echo "Great, all .meta files are commited."
+          fi
+        working-directory: Assets
       # Versioning
       - name: Bump version and push tag
         id: tag_version
@@ -66,8 +77,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ steps.tag_version.outputs.new_tag }}
-          release_name: ${{ steps.tag_version.outputs.new_tag }}
           upload_url: ${{ steps.create_release.outputs.upload_url }} 
           asset_path: build/${{ env.FILE_NAME }}.unitypackage
           asset_name: ${{ env.FILE_NAME }}_${{ steps.tag_version.outputs.new_tag }}.unitypackage
