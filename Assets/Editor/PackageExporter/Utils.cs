@@ -56,12 +56,11 @@ namespace PackageManagement
             if (!File.Exists(path))
             {
                 Debug.LogError("[PackageExporter] package.json not found.");
+                return;
             }
+            
             var packageStg = package.ToJson();
-            if (!string.IsNullOrEmpty(packageStg) && packageStg != "{}")
-            {
-                File.WriteAllText(path, packageStg, Encoding.UTF8);
-            }
+            File.WriteAllText(path, packageStg);
         }
 
         public static string CreateFileName(string version, string fileName)
