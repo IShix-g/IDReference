@@ -44,7 +44,7 @@ namespace PackageManagement
                 CreateFolderRecursively(path);
                 package = ScriptableObject.CreateInstance<Package>();
                 AssetDatabase.CreateAsset(package, path);
-                Debug.Log($"[ID reference provider] Create an path:{path}");
+                Print($"Create an path:{path}");
             }
 
             return package;
@@ -53,6 +53,10 @@ namespace PackageManagement
         public static void SavePackage(Package package, string root)
         {
             var path = Path.Combine(root, "package.json");
+            if (!File.Exists(path))
+            {
+                Debug.LogError("[PackageExporter] package.json not found.");
+            }
             var packageStg = package.ToJson();
             if (!string.IsNullOrEmpty(packageStg) && packageStg != "{}")
             {
