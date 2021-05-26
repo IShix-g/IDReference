@@ -4,7 +4,7 @@ name: Update package.json
 on:
   push:
     branches:
-      - main
+      - master
 
 env:
   TARGET_FILE: ./Assets/Plugins/IDReference/package.json
