@@ -14,7 +14,7 @@ namespace IDRef.Internal
     {
         public static void Export(string fileName, IEnumerable<IDReference> references)
         {
-            var path = EditorUtility.SaveFilePanel("Export CSV",  IDReferenceConfig.LatestOpenDirectory, fileName, "csv");
+            var path = EditorUtility.SaveFilePanel("Export CSV",  IDReferenceConfig.LatestOpenDirectory, $"{fileName}_IDReference", "csv");
             if (string.IsNullOrEmpty(path))
             {
                 return;

@@ -79,6 +79,11 @@ namespace IDRef.Internal
 
         void OnGUI()
         {
+            if (!reference.IsValid())
+            {
+                Close();
+            }
+            
             {
                 GUILayout.BeginVertical( GUI.skin.box );
                 var style = new GUIStyle(GUI.skin.label)

@@ -1,4 +1,5 @@
 
+using System;
 using System.IO;
 using UnityEditor;
 using UnityEngine;
@@ -34,6 +35,12 @@ namespace PackageManagement
 
         void OnGUI()
         {
+            if (editor == default)
+            {
+                Close();
+                return;
+            }
+            
             {
                 GUILayout.BeginVertical( GUI.skin.box );
                 var style = new GUIStyle(GUI.skin.label)
