@@ -37,10 +37,13 @@ namespace IDRef.Internal
 
         void OnGUI()
         {
-            if (initialized)
+            if (!initialized)
             {
-                editor.OnInspectorGUI();
+                Close();
+                return;
             }
+            
+            editor.OnInspectorGUI();
         }
 
         void OnDestroy()
