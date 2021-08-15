@@ -1,7 +1,10 @@
 
 using System;
-using IDRef.Internal;
 using UnityEngine;
+
+#if UNITY_EDITOR
+using IDRef.Internal;
+#endif
 
 namespace IDRef
 {
