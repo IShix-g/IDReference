@@ -1,6 +1,5 @@
 #if UNITY_EDITOR
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using UnityEngine;
 using UnityEditor;
@@ -15,8 +14,31 @@ namespace IDRef.Internal
 
         public IReadOnlyList<IDReference> References => references;
         public string TableID => tableID;
+        
+        internal void SetReference(string tableID, IDReference[] required)
+        {
+            this.tableID = tableID;
 
-        public void SetTableID(string tableID) => this.tableID = tableID;
+            if (required == null)
+            {
+                return;
+            }
+            
+            foreach (var obj in required)
+            {
+                var index = references.FindIndex(id => id == obj);
+                if (index >= 0)
+                {
+                    var current = references[index];
+                    current.Name = obj.Name;
+                    references[index] = current;
+                }
+                else
+                {
+                    references.Add(obj);
+                }
+            }
+        }
         
         public void AddNewID(string name = "")
         {
@@ -43,7 +65,7 @@ namespace IDRef.Internal
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public IDReference IDToIDReference(string id)
+        internal IDReference IDToIDReference(string id)
         {
             foreach (var reference in references)
             {
@@ -55,20 +77,7 @@ namespace IDRef.Internal
             return default;
         }
 
-        public string GetListTitle() => $"{TableID} ID Reference.";
-        
-        void OnEnable()
-        {
-            if (references != default)
-            {
-                var referencesNotEmpty = references.Where(x => !string.IsNullOrEmpty(x.Name)).ToArray();
-                var length = referencesNotEmpty.Select(x => x.Name).Distinct().Count();
-                if (referencesNotEmpty.Length != length)
-                {
-                    Debug.LogWarning($"[Name Duplication] Resolve the duplication. Name:{TableID} Path:{AssetDatabase.GetAssetPath(this)}");
-                }
-            }
-        }
+        internal string GetListTitle() => $"{TableID} ID Reference.";
 
         /// <summary>
         /// 現在所持中のIDの中に該当のidが存在するか？

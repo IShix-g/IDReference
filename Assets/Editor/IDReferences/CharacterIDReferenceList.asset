@@ -25,4 +25,6 @@ MonoBehaviour:
     Name: "Elephant \u305E\u3046"
   - ID: IDRef-Character-g455g
     Name: "Gorilla \u30B4\u30EA\u30E9"
+  - ID: Mob
+    Name: "Mob \u30E2\u30D6"
   tableID: Character

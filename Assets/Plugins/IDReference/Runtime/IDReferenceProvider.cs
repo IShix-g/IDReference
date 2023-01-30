@@ -18,7 +18,7 @@ namespace IDRef
         {
             idReferenceTables.Push(table);
 
-            IDReferenceList referenceList = null;
+            var referenceList = default(IDReferenceList);
             if (File.Exists(table.AssetPath))
             {
                 referenceList = AssetDatabase.LoadAssetAtPath<IDReferenceList>(table.AssetPath);
@@ -27,11 +27,11 @@ namespace IDRef
             {
                 CreateFolderRecursively(table.AssetPath);
                 referenceList = ScriptableObject.CreateInstance<IDReferenceList>();
-                referenceList.SetTableID(table.TableID);
                 AssetDatabase.CreateAsset(referenceList, table.AssetPath);
                 Debug.Log($"[ID reference provider] Create an {table.TableID} path:{table.AssetPath}");
             }
 
+            referenceList.SetReference(table.TableID, table.Required);
             table.SetAsset(referenceList);
         }
 
@@ -52,7 +52,7 @@ namespace IDRef
         /// </summary>
         /// <param name="path">一番子供のフォルダまでのパスe.g.)Assets/Resources/Sound/</param>
         /// <remarks>パスは"Assets/"で始まっている必要があります。Splitなので最後のスラッシュ(/)は不要です</remarks>
-        public static void CreateFolderRecursively(string path)
+        static void CreateFolderRecursively(string path)
         {
             Debug.Assert(path.StartsWith("Assets/"), "The `path` should be specified from `Assets/`");
 

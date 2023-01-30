@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.3731193, g: 0.38073996, b: 0.35872698, a: 1}
+  m_IndirectSpecularColor: {r: 0.37311915, g: 0.3807396, b: 0.35872662, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -248,8 +248,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   characterID: IDRef-Character-iwp05
-  storyID: IDRef-Story-7eum7
-  storyID2: IDRef-Story-6p5an
+  characterID2: 
 --- !u!1001 &3612930196326534748
 PrefabInstance:
   m_ObjectHideFlags: 0
