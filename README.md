@@ -161,6 +161,14 @@ characterTable = new IDReferenceTable("Character", disableDropDownAddID: true);
 
 ![add ID in dropdown](ReadMeImages/image8.png)
 
+## Set initial values
+
+By setting initial values, you can set your own ID.
+
+```c#
+characterTable = new IDReferenceTable("Character", required: new []{ new IDReference("モブ", "Mob") });
+```
+
 # ID Reference Object
 
 **Editor only.**

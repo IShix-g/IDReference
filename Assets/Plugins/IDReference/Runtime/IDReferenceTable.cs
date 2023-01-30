@@ -11,18 +11,20 @@ namespace IDRef
         public readonly string AssetPath;
         public readonly bool DisableRemoveButton;
         public readonly bool DisableDropDownAddID;
+        public readonly IDReference[] Required;
         
         IDReferenceList asset;
 
-        public IDReferenceTable(string tableID, bool disableRemoveButton, bool disableDropDownAddID)
+        public IDReferenceTable(string tableID, bool disableRemoveButton, bool disableDropDownAddID, IDReference[] required = null)
         {
             TableID = tableID;
             AssetPath = Path.Combine(IDReferenceConfig.AssetRootPath, $"{tableID}{IDReferenceConfig.AssetName}");
             DisableRemoveButton = disableRemoveButton;
             DisableDropDownAddID = disableDropDownAddID;
+            Required = required;
         }
 
-        public void SetAsset(IDReferenceList asset)
+        internal void SetAsset(IDReferenceList asset)
         {
             this.asset = asset;
         }
@@ -31,7 +33,7 @@ namespace IDRef
         /// アセットを取得
         /// </summary>
         /// <returns></returns>
-        public IDReferenceList GetAsset()
+        internal IDReferenceList GetAsset()
         {
             return asset;
         }
@@ -41,7 +43,7 @@ namespace IDRef
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public IDReference IDToIDReference(string id)
+        internal IDReference IDToIDReference(string id)
         {
             if (asset != default)
             {

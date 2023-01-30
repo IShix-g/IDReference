@@ -1,8 +1,6 @@
 {
     "name": "IDReference",
-    "references": [
-        "GUID:1f6b79477726f4a6f87160deb10da700"
-    ],
+    "references": [],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

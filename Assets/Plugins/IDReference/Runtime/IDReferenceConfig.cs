@@ -13,8 +13,8 @@ namespace IDRef.Internal
         public const string AssetName = "IDReferenceList.asset";
         public const string IDCharacters = "0123456789abcdefghijklmnopqrstuvwxyz";
         public const int IDRandomStringLength = 5;
-        public const string IDStart = "IDRef";
-        public const char IDPrfx = '-';
+        public const string IDUniq = "IDRef";
+        public const char IDPrefix = '-';
 
         public static Texture2D Logo
         {
@@ -25,10 +25,8 @@ namespace IDRef.Internal
             }
         }
         
-        public static string CreateID(string category, string id) => $"{IDStart}{IDPrfx}{category}{IDPrfx}{id}";
+        internal static string CreateID(string category, string id) => $"{id}{IDPrefix}{category}{IDPrefix}{IDUniq}";
 
-        public static bool IsID(string stg) => stg.StartsWith(IDStart);
-        
         public static string LatestOpenDirectory
         {
             get

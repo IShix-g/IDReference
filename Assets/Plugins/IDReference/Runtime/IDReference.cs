@@ -8,7 +8,7 @@ namespace IDRef
     {
         public string ID;
         public string Name;
-        
+
         public IDReference(string name, string id)
         {
             Name = name;
@@ -18,20 +18,13 @@ namespace IDRef
         public bool IsValid() => !string.IsNullOrEmpty(ID);
         
         public bool IsMyID(string stg) => ID == stg;
-
-        public override string ToString() => $"Name:{Name} ID:{ID}";
-
-        public bool Equals(IDReference other) => ID == other.ID && Name == other.Name;
-
+        
+        public bool Equals(IDReference other) => ID == other.ID;
         public override bool Equals(object obj) => obj is IDReference other && Equals(other);
-
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                return ((ID != null ? ID.GetHashCode() : 0) * 397) ^ (Name != null ? Name.GetHashCode() : 0);
-            }
-        }
+        public override int GetHashCode() => (ID != null ? ID.GetHashCode() : 0);
+        public static bool operator ==(IDReference lhs, IDReference rhs) => lhs.ID == rhs.ID;
+        public static bool operator !=(IDReference lhs, IDReference rhs) => !(lhs == rhs);
+        public override string ToString() => $"IDReference (Name:{Name} ID:{ID})";
     }
 }
 #endif

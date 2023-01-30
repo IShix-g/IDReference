@@ -6,12 +6,6 @@ public static class IDReferenceExtension
 {
     public static IDRef.IDReference ToIDReferenceEditorOnly(this string id)
     {
-        if (!IDRef.Internal.IDReferenceConfig.IsID(id))
-        {
-            Debug.LogError($"[IDReference] Is not ID : {id}");
-            return default;
-        }
-        
         foreach (var table in IDRef.IDReferenceProvider.GetTables())
         {
             var idReference = table.IDToIDReference(id);
@@ -20,7 +14,7 @@ public static class IDReferenceExtension
                 return idReference;
             }
         }
-        
+        Debug.LogError($"[IDReference] Is not ID : {id}");
         return default;
     }
 
@@ -33,7 +27,7 @@ public static class IDReferenceExtension
         }
         return string.Empty;
     }
-    
+
     public static Encoding GetEncodingCode(this byte[] bytes )
     {
         const byte bEscape = 0x1B;
@@ -46,11 +40,11 @@ public static class IDReferenceExtension
         const byte bJ = 0x4A;
         const byte bI = 0x49;
 
-        int len = bytes.Length;
+        var len = bytes.Length;
         byte b1, b2, b3, b4;
 
-        bool isBinary = false;
-        for (int i = 0; i < len; i++)
+        var isBinary = false;
+        for (var i = 0; i < len; i++)
         {
             b1 = bytes[i];
             if (b1 <= 0x06 || b1 == 0x7F || b1 == 0xFF)
@@ -67,8 +61,8 @@ public static class IDReferenceExtension
             return null;
         }
 
-        bool notJapanese = true;
-        for (int i = 0; i < len; i++)
+        var notJapanese = true;
+        for (var i = 0; i < len; i++)
         {
             b1 = bytes[i];
             if (b1 == bEscape || 0x80 <= b1)
@@ -82,7 +76,7 @@ public static class IDReferenceExtension
             return Encoding.ASCII;
         }
 
-        for (int i = 0; i < len - 2; i++)
+        for (var i = 0; i < len - 2; i++)
         {
             b1 = bytes[i];
             b2 = bytes[i + 1];
@@ -135,10 +129,10 @@ public static class IDReferenceExtension
             }
         }
 
-        int sjis = 0;
-        int euc = 0;
-        int utf8 = 0;
-        for (int i = 0; i < len - 1; i++)
+        var sjis = 0;
+        var euc = 0;
+        var utf8 = 0;
+        for (var i = 0; i < len - 1; i++)
         {
             b1 = bytes[i];
             b2 = bytes[i + 1];
@@ -150,7 +144,7 @@ public static class IDReferenceExtension
                 i++;
             }
         }
-        for (int i = 0; i < len - 1; i++)
+        for (var i = 0; i < len - 1; i++)
         {
             b1 = bytes[i];
             b2 = bytes[i + 1];
@@ -174,7 +168,7 @@ public static class IDReferenceExtension
                 }
             }
         }
-        for (int i = 0; i < len - 1; i++)
+        for (var i = 0; i < len - 1; i++)
         {
             b1 = bytes[i];
             b2 = bytes[i + 1];
