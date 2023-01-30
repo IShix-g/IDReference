@@ -33,7 +33,7 @@ namespace IDRef
         /// アセットを取得
         /// </summary>
         /// <returns></returns>
-        internal IDReferenceList GetAsset()
+        public IDReferenceList GetAsset()
         {
             return asset;
         }
