@@ -164,10 +164,13 @@ characterTable = new IDReferenceTable("Character", disableDropDownAddID: true);
 ## Set initial values
 
 By setting initial values, you can set your own ID.
+The added ID cannot be deleted or edited and is displayed in blue text.
 
 ```c#
-characterTable = new IDReferenceTable("Character", required: new []{ new IDReference("モブ", "Mob") });
+characterTable = new IDReferenceTable("Character", required: new []{ new IDReference("Mob モブ", "Mob") });
 ```
+
+![ID list](ReadMeImages/image14.png)
 
 # ID Reference Object
 

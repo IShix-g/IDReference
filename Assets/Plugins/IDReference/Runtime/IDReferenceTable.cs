@@ -24,19 +24,13 @@ namespace IDRef
             Required = required;
         }
 
-        internal void SetAsset(IDReferenceList asset)
-        {
-            this.asset = asset;
-        }
+        internal void SetAsset(IDReferenceList asset) => this.asset = asset;
         
         /// <summary>
         /// アセットを取得
         /// </summary>
         /// <returns></returns>
-        public IDReferenceList GetAsset()
-        {
-            return asset;
-        }
+        public IDReferenceList GetAsset() => asset;
         
         /// <summary>
         /// idからIDReferenceに変換
@@ -60,6 +54,27 @@ namespace IDRef
             IDReferenceEditorWindow.ShowDialog(GetAsset(), asset.GetListTitle());
         }
 
+        /// <summary>
+        /// Required内に存在するか？
+        /// </summary>
+        /// <param name="reference"></param>
+        /// <returns></returns>
+        public bool IsRequires(IDReference reference)
+        {
+            if (Required != default
+                && Required.Length > 0)
+            {
+                foreach (var r in Required)
+                {
+                    if (r == reference)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+        
         public void Dispose()
         {
             asset = null;

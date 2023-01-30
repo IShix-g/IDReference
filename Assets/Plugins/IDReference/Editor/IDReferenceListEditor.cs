@@ -43,19 +43,28 @@ namespace IDRef.Internal
                         referenceLengths[index] = 0;
                     }
                     var reference = list.References[index];
-                    
+                    var isRequired = table.IsRequires(reference);
                     var btnPos = new Rect( rect.x + rect.width - 30f, rect.y, 30f, rect.height );
                     var textPos = new Rect( rect.x, rect.y, rect.width - 36f, rect.height );
-                    var newName = EditorGUI.TextField(textPos, reference.Name);
-                    if (newName != reference.Name)
+                    var textFieldStyle = new GUIStyle(GUI.skin.textField);
+                    if (isRequired)
+                    {
+                        textFieldStyle.normal.textColor = Color.cyan;
+                    }
+                    var newName = EditorGUI.TextField(textPos, reference.Name, textFieldStyle);
+                    if (newName != reference.Name
+                        && !isRequired)
                     {
                         reference.Name = newName;
                         list.UpdateID(index, reference);
                     }
                     
-                    var style = new GUIStyle(GUI.skin.button);
-                    style.normal.textColor = referenceLengths[index] == 0 ? Color.white : Color.cyan;
-                    if (GUI.Button(btnPos, referenceLengths[index] == 0 ? "ref" : $"{referenceLengths[index]}", style) && !waitingForOpenWindow)
+                    var buttonStyle = new GUIStyle(GUI.skin.button);
+                    if (referenceLengths[index] > 0)
+                    {
+                        buttonStyle.normal.textColor = Color.green;
+                    }
+                    if (GUI.Button(btnPos, referenceLengths[index] == 0 ? "ref" : $"{referenceLengths[index]}", buttonStyle) && !waitingForOpenWindow)
                     {
                         waitingForOpenWindow = true;
                         IDReferenceObjectWindow.ShowDialog(reference, window =>
@@ -172,31 +181,52 @@ namespace IDRef.Internal
         
         void RemoveDirection(IDReferenceList list, IDReferenceTable table, ReorderableList reorderableList)
         {
-            var deleteDisableTitle = IDReferenceConfig.Language == SystemLanguage.Japanese
-                ? "削除は無効です"
-                : "Delete is disabled.";
+            var reference = list.References[reorderableList.index];
+            var isRequired = table.IsRequires(reference);
+            var title = string.Empty;
+            var contents = string.Empty;
+            var deleteBtn = string.Empty;
 
-            var deleteDisableContents = IDReferenceConfig.Language == SystemLanguage.Japanese
-                ? "管理者により削除機能が無効になっています。削除機能をご利用になりたい場合は、管理者にお問い合わせください。"
-                : "The delete function has been disabled by the administrator. If you want to use the delete function, please contact the administrator.";
-
-            var deleteTitle = IDReferenceConfig.Language == SystemLanguage.Japanese
-                ? "削除しても良いですか?"
-                : "Can I delete it?";
-
-            var deleteContents = IDReferenceConfig.Language == SystemLanguage.Japanese
-                ? $"{list.References[reorderableList.index].Name} を削除します。"
-                : $"Delete the \"{list.References[reorderableList.index].Name}\".";
-
-            var deleteBtn = IDReferenceConfig.Language == SystemLanguage.Japanese
-                ? "削除"
-                : "Delete it.";
-            
-            if (table.DisableRemoveButton)
+            if (isRequired)
             {
-                EditorUtility.DisplayDialog(deleteDisableTitle, deleteDisableContents, "Close");
+                title = IDReferenceConfig.Language == SystemLanguage.Japanese
+                    ? "削除できません"
+                    : "Cannot delete";
+                contents = IDReferenceConfig.Language == SystemLanguage.Japanese
+                    ? "管理者によって追加されたため、削除することができません。削除を希望される場合は、管理者にご連絡ください。"
+                    : "Cannot be removed because it was added by an administrator. Please contact the administrator if you wish to remove it.";
             }
-            else if (EditorUtility.DisplayDialog(deleteTitle, deleteContents, deleteBtn, "Close"))
+            else if (table.DisableRemoveButton)
+            {
+                title = IDReferenceConfig.Language == SystemLanguage.Japanese
+                    ? "削除は無効です"
+                    : "Delete is disabled.";
+
+                contents = IDReferenceConfig.Language == SystemLanguage.Japanese
+                    ? "管理者により削除機能が無効になっています。削除機能をご利用になりたい場合は、管理者にお問い合わせください。"
+                    : "The delete function has been disabled by the administrator. If you want to use the delete function, please contact the administrator.";
+            }
+            else
+            {
+                title = IDReferenceConfig.Language == SystemLanguage.Japanese
+                    ? "削除しても良いですか?"
+                    : "Can I delete it?";
+
+                contents = IDReferenceConfig.Language == SystemLanguage.Japanese
+                    ? $"{reference.Name} を削除します。"
+                    : $"Delete the \"{reference.Name}\".";
+
+                deleteBtn = IDReferenceConfig.Language == SystemLanguage.Japanese
+                    ? "削除"
+                    : "Delete it.";   
+            }
+
+            if (isRequired
+                || table.DisableRemoveButton)
+            {
+                EditorUtility.DisplayDialog(title, contents, "Close");
+            }
+            else if (EditorUtility.DisplayDialog(title, contents, deleteBtn, "Close"))
             {
                 list.RemoveID(reorderableList.index);
             }
