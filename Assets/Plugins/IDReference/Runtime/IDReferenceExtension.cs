@@ -1,6 +1,6 @@
 #if UNITY_EDITOR
+using System;
 using System.Text;
-using UnityEngine;
 
 public static class IDReferenceExtension
 {
@@ -14,8 +14,8 @@ public static class IDReferenceExtension
                 return idReference;
             }
         }
-        Debug.LogError($"[IDReference] Is not ID : {id}");
-        return default;
+
+        throw new ArgumentException($"[IDReference] Nonexistent ID : {id}");
     }
 
     public static string ToIDReferenceValueEditorOnly(this string id)
