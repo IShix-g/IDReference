@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5880839338721634351}
   - component: {fileID: 1147514551928605961}
   m_Layer: 0
-  m_Name: IDReferenceTest (1) 9
+  m_Name: IDReferenceTest (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -43,6 +43,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d3eecc628e9e4cca84a1e80e29c35ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  characterID: IDRef-Character-iwp05
-  storyID: 
-  storyID2: 
+  characterID: IDRef-Character-23g32

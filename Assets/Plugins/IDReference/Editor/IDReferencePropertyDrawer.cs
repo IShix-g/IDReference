@@ -29,10 +29,11 @@ namespace IDRef.Internal
                 EditorGUI.PropertyField(position, property, true);
                 var style  = new GUIStyle();
                 style.normal.textColor  = Color.red;
-                EditorGUILayout.TextArea($"{GetTxt(Application.systemLanguage)}{attr.GetAssetPath()}", style);
+                var assetPath = attr != default ? attr.GetAssetPath() : "";
+                EditorGUILayout.TextArea($"{GetTxt(Application.systemLanguage)}{assetPath}", style);
                 return;
             }
-
+            
             var ids = new List<string>();
             var keys = new List<string>();
             
@@ -52,9 +53,9 @@ namespace IDRef.Internal
                 keys.Add("Add ID...");
             }
             
+            var popUpLabel = EditorGUI.BeginProperty(position, label, property);
             var curValue = string.IsNullOrEmpty(property.stringValue) ? EmptyID : property.stringValue;
             var optionsArray = ids.Select(o => new GUIContent(o)).ToArray();
-            var popUpLabel = EditorGUI.BeginProperty(position, null, property);
             var curIndex = keys.IndexOf(curValue);
 
             if (curIndex < 0)
@@ -62,6 +63,8 @@ namespace IDRef.Internal
                 curIndex = 0;
                 ids[0] = "*Unknown";
             }
+            
+            EditorGUI.BeginChangeCheck();
             
             var newIndex = EditorGUI.Popup(position, popUpLabel, curIndex, optionsArray);
             
@@ -77,8 +80,12 @@ namespace IDRef.Internal
             {
                 newValue = string.Empty;
             }
-            property.stringValue = newValue;
-            
+
+            if (EditorGUI.EndChangeCheck())
+            {
+                property.stringValue = newValue;
+            }
+
             EditorGUI.EndProperty();
         }
 
