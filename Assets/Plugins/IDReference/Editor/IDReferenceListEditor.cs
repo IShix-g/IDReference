@@ -38,10 +38,7 @@ namespace IDRef.Internal
             reorderableList.drawElementCallback =
                 (rect, index, isActive, isFocused) =>
                 {
-                    if (!referenceLengths.ContainsKey(index))
-                    {
-                        referenceLengths[index] = 0;
-                    }
+                    referenceLengths.TryAdd(index, 0);
                     var reference = list.References[index];
                     var isRequired = table.IsRequires(reference);
                     var btnPos = new Rect( rect.x + rect.width - 30f, rect.y, 30f, rect.height );
@@ -144,7 +141,6 @@ namespace IDRef.Internal
             
             if (list == default || table == default)
             {
-                OnEnable();
                 GUILayout.BeginVertical( GUI.skin.box );
                 var style = new GUIStyle(GUI.skin.label)
                 {
