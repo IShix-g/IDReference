@@ -50,31 +50,35 @@ namespace IDRef
         /// <summary>
         /// 複数階層のフォルダを作成する
         /// </summary>
-        /// <param name="path">一番子供のフォルダまでのパスe.g.)Assets/Resources/Sound/</param>
-        /// <remarks>パスは"Assets/"で始まっている必要があります。Splitなので最後のスラッシュ(/)は不要です</remarks>
         static void CreateFolderRecursively(string path)
         {
-            Debug.Assert(path.StartsWith("Assets/"), "The `path` should be specified from `Assets/`");
-
-            if (AssetDatabase.IsValidFolder(path))
+            if (!path.StartsWith("Assets"))
             {
-                return;
+                throw new ArgumentException("Specify a path starting with Asset.");
+            }
+
+            if (Path.HasExtension(path))
+            {
+                path = Path.GetDirectoryName(path);
             }
             
-            if (path[path.Length - 1] == '/')
-            {
-                path = path.Substring(0, path.Length - 1);
-            }
+            var folders = path.Split('/');
+            var parentFolder = string.Empty;
 
-            var names = path.Split('/');
-            for (int i = 1; i < names.Length; i++)
+            foreach (var folder in folders.Where(f => !string.IsNullOrEmpty(f)))
             {
-                var parent = string.Join("/", names.Take(i).ToArray());
-                var target = string.Join("/", names.Take(i + 1).ToArray());
-                var child = names[i];
-                if (!AssetDatabase.IsValidFolder(target))
+                if (string.IsNullOrEmpty(parentFolder))
                 {
-                    AssetDatabase.CreateFolder(parent, child);
+                    parentFolder = folder;
+                }
+                else
+                {
+                    var newFolder = Path.Combine(parentFolder, folder);
+                    if (!AssetDatabase.IsValidFolder(newFolder)) 
+                    {
+                        AssetDatabase.CreateFolder(parentFolder, folder);
+                    }
+                    parentFolder = newFolder;   
                 }
             }
         }
