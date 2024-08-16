@@ -7,12 +7,17 @@ using UnityEditor;
 [InitializeOnLoad]
 public sealed class IDReferenceSetting
 {
-    static readonly IDReferenceTable characterTable;
-    static readonly IDReferenceTable storyTable;
-    static readonly IDReferenceTable monsterTable;
-    static readonly IDReferenceTable itemTable;
+    static IDReferenceTable characterTable;
+    static IDReferenceTable storyTable;
+    static IDReferenceTable monsterTable;
+    static IDReferenceTable itemTable;
     
     static IDReferenceSetting()
+    {
+        EditorApplication.delayCall += Initialize;
+    }
+
+    static void Initialize()
     {
         characterTable = new IDReferenceTable("Character", disableRemoveButton: false, disableDropDownAddID: false, required: new []{ new IDReference("Mob モブ", "Mob") });
         storyTable = new IDReferenceTable("Story", disableRemoveButton: true, disableDropDownAddID: true);
@@ -24,7 +29,7 @@ public sealed class IDReferenceSetting
         IDReferenceProvider.SetTable(monsterTable);
         IDReferenceProvider.SetTable(itemTable);
     }
-    
+
     /*
      * CustomMenu ------------
      */

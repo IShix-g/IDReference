@@ -71,9 +71,14 @@ using IDRef;
 [InitializeOnLoad]
 public sealed class IDReferenceSetting
 {
-    static readonly IDReferenceTable characterTable;
+    static IDReferenceTable characterTable;
 
     static IDReferenceSetting()
+    {
+        EditorApplication.delayCall += Initialize;
+    }
+    
+    static void Initialize()
     {
         characterTable = new IDReferenceTable("Character", false, false);
         IDReferenceProvider.SetTable(characterTable);
@@ -115,9 +120,14 @@ It is useful to have it set up.
 ![Custom menu](ReadMeImages/image9.png)
 
 ```c#
-static readonly IDReferenceTable characterTable;
+static IDReferenceTable characterTable;
 
 static IDReferenceSetting()
+{
+    EditorApplication.delayCall += Initialize;
+}
+
+static void Initialize()
 {
     characterTable = new IDReferenceTable("Character", false, false);
     IDReferenceProvider.SetTable(characterTable);
