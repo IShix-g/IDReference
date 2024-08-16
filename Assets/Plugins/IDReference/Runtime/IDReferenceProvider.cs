@@ -17,20 +17,17 @@ namespace IDRef
         public static void SetTable(IDReferenceTable table)
         {
             idReferenceTables.Push(table);
-
-            var referenceList = default(IDReferenceList);
-            if (File.Exists(table.AssetPath))
+            
+            if (!File.Exists(table.AssetPath))
             {
-                referenceList = AssetDatabase.LoadAssetAtPath<IDReferenceList>(table.AssetPath);
-            }
-            else
-            {
+                
                 CreateFolderRecursively(table.AssetPath);
-                referenceList = ScriptableObject.CreateInstance<IDReferenceList>();
-                AssetDatabase.CreateAsset(referenceList, table.AssetPath);
+                var list = ScriptableObject.CreateInstance<IDReferenceList>();
+                AssetDatabase.CreateAsset(list, table.AssetPath);
                 Debug.Log($"[ID reference provider] Create an {table.TableID} path:{table.AssetPath}");
             }
-
+            
+            var referenceList = AssetDatabase.LoadAssetAtPath<IDReferenceList>(table.AssetPath);
             referenceList.SetReference(table.TableID, table.Required);
             table.SetAsset(referenceList);
         }
