@@ -42,9 +42,7 @@ namespace IDRef
         
         public static IDReferenceTable GetTable(string tableID)
         {
-            var table = idReferenceTables.FirstOrDefault(x => x.TableID == tableID);
-            Assert.IsNotNull(table, $"[ID reference provider] Nonexistent ID:{tableID}");
-            return table;
+            return idReferenceTables.FirstOrDefault(x => x.TableID == tableID);
         }
 
         /// <summary>

@@ -14,11 +14,6 @@ public sealed class IDReferenceSetting
     
     static IDReferenceSetting()
     {
-        EditorApplication.delayCall += Initialize;
-    }
-
-    static void Initialize()
-    {
         characterTable = new IDReferenceTable("Character", disableRemoveButton: false, disableDropDownAddID: false, required: new []{ new IDReference("Mob モブ", "Mob") });
         storyTable = new IDReferenceTable("Story", disableRemoveButton: true, disableDropDownAddID: true);
         monsterTable = new IDReferenceTable("Monster", disableRemoveButton: false, disableDropDownAddID: false);

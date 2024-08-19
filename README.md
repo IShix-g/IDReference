@@ -75,11 +75,6 @@ public sealed class IDReferenceSetting
 
     static IDReferenceSetting()
     {
-        EditorApplication.delayCall += Initialize;
-    }
-    
-    static void Initialize()
-    {
         characterTable = new IDReferenceTable("Character", false, false);
         IDReferenceProvider.SetTable(characterTable);
     }
@@ -123,11 +118,6 @@ It is useful to have it set up.
 static IDReferenceTable characterTable;
 
 static IDReferenceSetting()
-{
-    EditorApplication.delayCall += Initialize;
-}
-
-static void Initialize()
 {
     characterTable = new IDReferenceTable("Character", false, false);
     IDReferenceProvider.SetTable(characterTable);
