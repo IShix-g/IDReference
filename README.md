@@ -1,7 +1,8 @@
-![IDReference](ReadMeImages/image1.png)
+![Unity](https://img.shields.io/badge/Unity-2021.3%2B-black)
 
-# Unity Version
-Unity 2021.3 higher
+[README - 日本語版](README_jp.md)
+
+![IDReference](ReadMeImages/image1.png)
 
 # Easily manage your ID.
 
