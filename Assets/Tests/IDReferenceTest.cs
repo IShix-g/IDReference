@@ -9,15 +9,16 @@ public sealed class IDReferenceTest : MonoBehaviour
     {
 #if UNITY_EDITOR
         var idReference = characterID.ToIDReferenceEditorOnly();
-        if (idReference.IsValid())
+        if (!idReference.IsValid())
         {
-            var id = idReference.ID;
-            var name = idReference.Name;
-    
-            Debug.Log($"ID:{id} Name:{name}");
-            // or
-            Debug.Log(idReference);
+            return;
         }
+        var id = idReference.ID;
+        var name = idReference.Name;
+    
+        Debug.Log($"ID:{id} Name:{name}");
+        // or
+        Debug.Log(idReference);
 #endif
     }
 }
