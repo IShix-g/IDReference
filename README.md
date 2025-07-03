@@ -46,7 +46,10 @@ The dedicated panel makes it easy to modify.
 
 ## Package Manager
 
-URL : `https://github.com/IShix-g/IDReference.git?path=Assets/Plugins/IDReference`
+#### URL
+```
+https://github.com/IShix-g/IDReference.git?path=Assets/Plugins/IDReference
+```
 
 ### [Unity 2019.3 higher] Install via git URL
 Add the Url to Package Manager

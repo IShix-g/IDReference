@@ -45,7 +45,10 @@
 
 ### パッケージマネージャー
 
-URL : `https://github.com/IShix-g/IDReference.git?path=Assets/Plugins/IDReference`
+#### URL
+```
+https://github.com/IShix-g/IDReference.git?path=Assets/Plugins/IDReference
+```
 
 #### [Unity 2019.3 higher] Install via git URL
 パッケージマネージャーにURLを追加します。
