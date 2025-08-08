@@ -11,24 +11,25 @@ env:
 
 jobs:
   update-packagejson:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
+    timeout-minutes: 5
     steps:
       # Checkout
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Output package.json (Before)
         run: cat ${{ env.TARGET_FILE}}
       # Cache
       - name: Cache
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: Library
           key: Library-Package
           restore-keys: Library-
       # Get version
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Get next version 
         id: tag_version
-        uses: mathieudutour/github-tag-action@v5.5
+        uses: mathieudutour/github-tag-action@v6.2
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           dry_run: true
