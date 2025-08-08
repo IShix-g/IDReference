@@ -65,7 +65,7 @@ namespace IDRef.Internal
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        internal IDReference IDToIDReference(string id)
+        public IDReference IDToIDReference(string id)
         {
             foreach (var reference in references)
             {

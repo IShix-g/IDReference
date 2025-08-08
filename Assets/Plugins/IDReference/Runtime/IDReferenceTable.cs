@@ -37,7 +37,7 @@ namespace IDRef
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        internal IDReference IDToIDReference(string id)
+        public IDReference IDToIDReference(string id)
         {
             if (asset != default)
             {
